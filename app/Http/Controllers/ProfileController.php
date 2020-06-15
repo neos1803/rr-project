@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -13,7 +14,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        
     }
 
     /**
@@ -43,9 +44,9 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $profile)
     {
-        //
+        return view('profile.retrieve', ['profile'=>$profile]);
     }
 
     /**
@@ -66,9 +67,15 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(User $profile)
     {
-        //
+        $inputs = request()->validate([
+            'username'=> ['required', 'string', 'max:255', 'alpha_dash'],
+            'password'=> ['min:6', 'max:255', 'confirmed']
+        ]);
+
+        $profile->update($inputs);
+        return back();
     }
 
     /**
